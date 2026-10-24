@@ -15,6 +15,8 @@ PluginComponent {
     readonly property bool showClockIdle: pluginData.showClockIdle ?? true
     readonly property bool showSecondsW: pluginData.showSeconds ?? false
     readonly property bool pillFlashEnabled: pluginData.pillFlash ?? true
+    readonly property bool reduceMotion: pluginData.reduceMotion ?? false
+    readonly property bool animationsEnabled: !reduceMotion && Theme.currentAnimationSpeed !== SettingsData.AnimationSpeed.None
 
     // ---- 媒体状态 ----
     readonly property MprisPlayer player: MprisController.activePlayer

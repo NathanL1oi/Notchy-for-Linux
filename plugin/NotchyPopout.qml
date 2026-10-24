@@ -11,9 +11,37 @@ Column {
     required property var widgetRoot
     property var parentPopout: null
     property var closePopout: null
+    property var tabTooltip: DankTooltipV2 {}
     readonly property bool popoutVisible: parentPopout?.shouldBeVisible ?? false
 
     spacing: Theme.spacingM
+    opacity: popoutVisible ? 1 : 0
+    scale: popoutVisible ? 1 : 0.97
+    transformOrigin: Item.Top
+
+    Behavior on opacity {
+        NumberAnimation {
+            duration: panel.widgetRoot.animationsEnabled ? 180 : 0
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    Behavior on scale {
+        NumberAnimation {
+            duration: panel.widgetRoot.animationsEnabled ? 180 : 0
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    transform: Translate {
+        y: panel.popoutVisible ? 0 : -6
+        Behavior on y {
+            NumberAnimation {
+                duration: panel.widgetRoot.animationsEnabled ? 180 : 0
+                easing.type: Easing.OutCubic
+            }
+        }
+    }
 
     onParentPopoutChanged: {
         if (parentPopout) {
@@ -24,6 +52,8 @@ Column {
     onPopoutVisibleChanged: {
         if (popoutVisible)
             Qt.callLater(widgetRoot.fixPopoutPosition);
+        else
+            tabTooltip.hide();
     }
 
     // ---- 标签栏 ----
@@ -98,12 +128,28 @@ Column {
                     }
                 }
 
+                Timer {
+                    id: tabTooltipTimer
+                    interval: 400
+                    repeat: false
+                    onTriggered: panel.tabTooltip.show(tabDelegate.modelData.label, tabDelegate, 0, 0, "bottom")
+                }
+
                 MouseArea {
                     id: tabHover
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: panel.widgetRoot.currentTab = tabDelegate.index
+                    onEntered: tabTooltipTimer.restart()
+                    onExited: {
+                        tabTooltipTimer.stop();
+                        panel.tabTooltip.hide();
+                    }
+                    onClicked: {
+                        tabTooltipTimer.stop();
+                        panel.tabTooltip.hide();
+                        panel.widgetRoot.currentTab = tabDelegate.index;
+                    }
                 }
             }
         }

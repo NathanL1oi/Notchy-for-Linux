@@ -194,21 +194,27 @@ Column {
                 }
             }
 
-            // 错误 / 未配置
-            StyledText {
+            // 加载 / 错误 / 未配置
+            NotchyEmptyState {
                 readonly property var u: tab.widgetRoot.kimiUsage
-                visible: !u || !!u.error
                 width: parent.width
-                text: {
-                    if (tab.widgetRoot.kimiUsageLoading && (!u || u.error))
-                        return "正在查询…";
-                    if (!u || u.error === "nokey")
-                        return "未配置 Kimi CodePlan Key（留空则自动读取 ZCode 配置）";
-                    return "查询失败：" + (u.error ?? "");
-                }
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceTextMedium
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                compact: true
+                visible: tab.widgetRoot.kimiUsageLoading && (!u || u.error)
+                icon: "sync"
+                title: "正在查询 Kimi 额度"
+                message: "正在获取最新用量"
+            }
+
+            NotchyEmptyState {
+                readonly property var u: tab.widgetRoot.kimiUsage
+                width: parent.width
+                compact: true
+                visible: !tab.widgetRoot.kimiUsageLoading && (!u || !!u.error)
+                icon: (!u || u.error === "nokey") ? "key_off" : "cloud_off"
+                title: (!u || u.error === "nokey") ? "未配置 Kimi CodePlan Key" : "Kimi 额度查询失败"
+                message: (!u || u.error === "nokey") ? "留空则自动读取 ZCode 配置" : (u.error ?? "")
+                actionText: (!u || u.error === "nokey") ? "" : "重试"
+                onActionClicked: tab.widgetRoot.fetchUsage()
             }
 
             StyledText {
@@ -256,18 +262,32 @@ Column {
 
             StyledText {
                 readonly property var u: tab.widgetRoot.deepseekUsage
-                text: {
-                    if (tab.widgetRoot.deepseekUsageLoading && (!u || u.error))
-                        return "正在查询…";
-                    if (!u || u.error === "nokey")
-                        return "未配置 API Key";
-                    if (u.error)
-                        return "查询失败：" + u.error;
-                    return "¥ " + Number(u.balance).toFixed(2);
-                }
-                font.pixelSize: (tab.widgetRoot.deepseekUsage && !tab.widgetRoot.deepseekUsage.error) ? 26 : Theme.fontSizeMedium
+                visible: u && !u.error
+                text: u ? ("¥ " + Number(u.balance).toFixed(2)) : ""
+                font.pixelSize: 26
                 font.weight: Font.Bold
-                color: (tab.widgetRoot.deepseekUsage && !tab.widgetRoot.deepseekUsage.error) ? Theme.primary : Theme.surfaceTextMedium
+                color: Theme.primary
+            }
+
+            NotchyEmptyState {
+                readonly property var u: tab.widgetRoot.deepseekUsage
+                width: parent.width
+                compact: true
+                visible: tab.widgetRoot.deepseekUsageLoading && (!u || u.error)
+                icon: "sync"
+                title: "正在查询 DeepSeek 余额"
+            }
+
+            NotchyEmptyState {
+                readonly property var u: tab.widgetRoot.deepseekUsage
+                width: parent.width
+                compact: true
+                visible: !tab.widgetRoot.deepseekUsageLoading && (!u || !!u.error)
+                icon: (!u || u.error === "nokey") ? "key_off" : "cloud_off"
+                title: (!u || u.error === "nokey") ? "未配置 DeepSeek API Key" : "DeepSeek 查询失败"
+                message: (!u || u.error === "nokey") ? "可在插件设置中填入 Key" : (u.error ?? "")
+                actionText: (!u || u.error === "nokey") ? "" : "重试"
+                onActionClicked: tab.widgetRoot.fetchUsage()
             }
 
             StyledText {
@@ -276,16 +296,6 @@ Column {
                 text: u ? ("赠金 ¥" + Number(u.granted).toFixed(2) + " · 充值 ¥" + Number(u.toppedUp).toFixed(2) + " · 更新于 " + u.when) : ""
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.surfaceTextMedium
-            }
-
-            StyledText {
-                readonly property var u: tab.widgetRoot.deepseekUsage
-                visible: !tab.widgetRoot.deepseekUsageLoading && (!u || u.error === "nokey")
-                text: "在插件设置中填入 DeepSeek API Key（platform.deepseek.com → API keys）"
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceTextMedium
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                width: parent.width
             }
         }
     }

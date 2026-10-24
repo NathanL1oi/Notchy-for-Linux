@@ -43,6 +43,13 @@ PluginSettings {
         defaultValue: true
     }
 
+    ToggleSetting {
+        settingKey: "reduceMotion"
+        label: "减少动画"
+        description: "关闭药丸内容切换和弹层的位移、缩放与淡入淡出动画；也会遵循 DMS 全局动画设置"
+        defaultValue: false
+    }
+
     StyledText {
         width: parent.width
         text: "番茄钟"

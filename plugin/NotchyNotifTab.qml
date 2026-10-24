@@ -61,24 +61,12 @@ Column {
     }
 
     // ---- 空状态 ----
-    Column {
+    NotchyEmptyState {
         width: parent.width
-        spacing: 6
         visible: tab.notifs.length === 0
-
-        DankIcon {
-            anchors.horizontalCenter: parent.horizontalCenter
-            name: "notifications_off"
-            size: 32
-            color: Theme.withAlpha(Theme.surfaceText, 0.3)
-        }
-
-        StyledText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "没有活动通知"
-            font.pixelSize: Theme.fontSizeSmall
-            color: Theme.surfaceTextMedium
-        }
+        icon: "notifications_off"
+        title: "没有活动通知"
+        message: "新通知会在这里显示"
     }
 
     // ---- 通知列表 ----

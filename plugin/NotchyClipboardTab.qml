@@ -102,24 +102,12 @@ Column {
     }
 
     // ---- 空状态 ----
-    Column {
+    NotchyEmptyState {
         width: parent.width
-        spacing: 6
         visible: tab.entries.length === 0
-
-        DankIcon {
-            anchors.horizontalCenter: parent.horizontalCenter
-            name: "content_paste_off"
-            size: 32
-            color: Theme.withAlpha(Theme.surfaceText, 0.3)
-        }
-
-        StyledText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: ClipboardService.clipboardAvailable ? "暂无剪贴板历史" : "剪贴板服务不可用"
-            font.pixelSize: Theme.fontSizeSmall
-            color: Theme.surfaceTextMedium
-        }
+        icon: !ClipboardService.clipboardAvailable ? "cloud_off" : ((ClipboardService.searchText ?? "") !== "" ? "search_off" : "content_paste_off")
+        title: !ClipboardService.clipboardAvailable ? "剪贴板服务不可用" : ((ClipboardService.searchText ?? "") !== "" ? "没有匹配结果" : "暂无剪贴板历史")
+        message: !ClipboardService.clipboardAvailable ? "请检查 DMS 剪贴板服务" : ((ClipboardService.searchText ?? "") !== "" ? "尝试其他关键词" : "复制内容后会在这里显示")
     }
 
     // ---- 历史列表 ----

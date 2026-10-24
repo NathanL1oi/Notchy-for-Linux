@@ -12,6 +12,7 @@ PanelWindow {
     id: menu
 
     required property var widgetRoot
+    property var menuTooltip: DankTooltipV2 {}
 
     function toggle() {
         visible = !visible;
@@ -39,6 +40,8 @@ PanelWindow {
         if (visible) {
             leaveTimer.stop();
             Qt.callLater(() => menuRect.forceActiveFocus());
+        } else {
+            menuTooltip.hide();
         }
     }
 
@@ -94,6 +97,7 @@ PanelWindow {
                     model: NotchyTabs.tabs
 
                     Rectangle {
+                        id: tabButton
                         required property var modelData
                         width: 36
                         height: 32
@@ -107,12 +111,26 @@ PanelWindow {
                             color: parent.modelData.index === widgetRoot.currentTab ? Theme.primary : Theme.surfaceTextMedium
                         }
 
+                        Timer {
+                            id: tabTooltipTimer
+                            interval: 400
+                            repeat: false
+                            onTriggered: menu.menuTooltip.show(tabButton.modelData.label, tabButton, 0, 0, "bottom")
+                        }
+
                         MouseArea {
                             id: tabBtnHover
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
+                            onEntered: tabTooltipTimer.restart()
+                            onExited: {
+                                tabTooltipTimer.stop();
+                                menu.menuTooltip.hide();
+                            }
                             onClicked: {
+                                tabTooltipTimer.stop();
+                                menu.menuTooltip.hide();
                                 widgetRoot.currentTab = parent.modelData.index;
                                 menu.visible = false;
                                 if (!(widgetRoot.popoutRef?.shouldBeVisible ?? false))

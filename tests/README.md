@@ -16,6 +16,7 @@ bash tests/run-tests.sh
 - 六标签页共享模型与组件引用；
 - 日历下一日程选择和单次临近提醒；
 - 活动 QML 文件结构、本地类型、JavaScript 导入和插件清单入口。
+- 药丸/弹层动画、减少动画设置、延迟 Tooltip 和统一状态组件的结构回归。
 
 如果系统存在 `qmllint`，脚本会继续检查全部活动 QML 文件；未安装时会明确输出 `SKIP`。Node 隔离测试不能替代 Quickshell/DMS 的实机类型检查与交互验证。
 
