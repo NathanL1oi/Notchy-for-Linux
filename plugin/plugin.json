@@ -1,0 +1,21 @@
+{
+    "id": "notchy",
+    "name": "Notchy Island",
+    "description": "Mac 灵动岛风格面板：顶栏中心药丸 + 标签页弹层（媒体/通知/剪贴板/暂存架/番茄钟/AI 额度），悬停或点击展开。",
+    "version": "0.8.0",
+    "author": "nathan",
+    "type": "composite",
+    "capabilities": ["daemon", "dankbar-widget"],
+    "components": {
+        "daemon": "./NotchyDaemon.qml",
+        "widget": "./NotchyWidget.qml"
+    },
+    "settings": "./NotchySettings.qml",
+    "icon": "music_note",
+    "requires_dms": ">=1.5.0",
+    "permissions": [
+        "settings_read",
+        "settings_write",
+        "network"
+    ]
+}
